@@ -15,6 +15,9 @@ class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app)
     {
+        include_once __DIR__ . '/../database/migrations/create_files_table.php.stub';
+
+        (new \CreateFilesTable())->up();
         (new CreateUpoloUsersTable())->up();
     }
 }

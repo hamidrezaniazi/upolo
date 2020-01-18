@@ -1,0 +1,44 @@
+<?php
+
+use App\ModelHistory;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateFilesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('files', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->uuid('uuid');
+            $table->string('path');
+            $table->string('disk', 255)->default('public');
+            $table->string('filename')->nullable();
+            $table->string('type')->nullable();
+            $table->string('flag')->nullable();
+            $table->string('mime')->nullable();
+            $table->nullableMorphs('owner');
+            $table->unsignedBigInteger('creator_id');
+            $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('creator_id')->references('id')->on('users');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('files');
+    }
+}
