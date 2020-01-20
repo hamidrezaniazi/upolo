@@ -2,9 +2,17 @@
 
 namespace Hamidrezaniazi\Upolo;
 
-use Hamidrezaniazi\Upolo\Models\File;
+use Illuminate\Support\Facades\Facade;
 
-class Upolo extends File
+class Upolo extends Facade
 {
-    //
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'upolo';
+    }
 }

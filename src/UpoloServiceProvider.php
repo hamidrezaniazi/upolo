@@ -24,7 +24,7 @@ class UpoloServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('upolo', function () {
-            return new Upolo();
+            return new UpoloSkeleton();
         });
     }
 }
