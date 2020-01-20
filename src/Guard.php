@@ -23,6 +23,6 @@ class Guard
                 return config("auth.providers.{$guard['provider']}.model");
             })->get($guard);
 
-        return class_exists($guard) ? $guard : $guard = \Hamidrezaniazi\Upolo\Tests\Model\User::class;
+        return class_exists($guard) ? $guard : $guard = \Hamidrezaniazi\Upolo\Tests\Models\User::class;
     }
 }
