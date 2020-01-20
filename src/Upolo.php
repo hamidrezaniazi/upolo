@@ -2,7 +2,9 @@
 
 namespace Hamidrezaniazi\Upolo;
 
-class Upolo
+use Hamidrezaniazi\Upolo\Models\File;
+
+class Upolo extends File
 {
-    // Build your next great package.
+    //
 }
