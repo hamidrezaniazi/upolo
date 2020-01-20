@@ -4,18 +4,17 @@ namespace Hamidrezaniazi\Upolo\Models;
 
 use Hamidrezaniazi\Upolo\Contracts\HasFileInterface;
 use Hamidrezaniazi\Upolo\Guard;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Support\Str;
 
 /**
- * Class File
- * @package Hamidrezaniazi\Upolo\Models
+ * Class File.
  *
- * @property integer id
+ * @property int id
  * @property string uuid
  * @property string path
  * @property string disk
@@ -60,7 +59,7 @@ class File extends Model
         ?string $disk = 'local',
         ?string $type = null,
         ?string $flag = null
-    ): File {
+    ): self {
         $uuid = Str::uuid();
         $path = sprintf('%s/%s', $creator->getKey(), $uuid);
         $path = $uploadedFile->store($path, $disk);
@@ -76,6 +75,7 @@ class File extends Model
         $file->flag = $flag;
         $file->path = $path;
         $file->save();
+
         return $file;
     }
 }

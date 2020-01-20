@@ -2,8 +2,8 @@
 
 namespace Hamidrezaniazi\Upolo\Tests\Migrations;
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMockModelsTable
 {
