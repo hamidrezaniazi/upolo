@@ -37,7 +37,7 @@ class UpoloTest extends TestCase
         $filename = $this->faker->word;
         $type = $this->faker->word;
         $flag = $this->faker->word;
-        $disk = 'local';
+        $disk = 'public';
         $uploadedFile = UploadedFile::fake()->create($filename);
         $file = $this->file->upload($user, $uploadedFile, $owner, $disk, $type, $flag);
         $path = sprintf('%s/%s/%s', $user->getKey(), $file->uuid, $uploadedFile->hashName());
@@ -78,13 +78,46 @@ class UpoloTest extends TestCase
                 'owner_id'   => null,
                 'filename'   => $filename,
                 'mime'       => $uploadedFile->getClientMimeType(),
-                'disk'       => 'local',
+                'disk'       => 'public',
                 'type'       => null,
                 'flag'       => null,
                 'path'       => $path,
             ]
         );
         $this->assertNotNull($file->uuid);
-        Storage::disk('local')->assertExists($path);
+        Storage::disk('public')->assertExists($path);
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterFilesByOwner()
+    {
+        $file = factory(File::class)->state('has_owner')->create();
+        factory(File::class, 5)->create();
+        $this->assertEquals(1, File::whereOwnerIs($file->owner)->count());
+        $this->assertTrue(File::whereOwnerIs($file->owner)->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterFilesByOwnerId()
+    {
+        $file = factory(File::class)->state('has_owner')->create();
+        factory(File::class, 5)->create();
+        $this->assertEquals(1, File::whereOwnerIdIs($file->owner->getKey())->count());
+        $this->assertTrue(File::whereOwnerIdIs($file->owner->getKey())->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterFilesByOwnerType()
+    {
+        $file = factory(File::class)->state('has_owner')->create();
+        factory(File::class, 5)->create();
+        $this->assertEquals(1, File::whereOwnerTypeIs($file->owner->getMorphClass())->count());
+        $this->assertTrue(File::whereOwnerTypeIs($file->owner->getMorphClass())->first()->is($file));
     }
 }
