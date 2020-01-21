@@ -23,12 +23,13 @@ $factory->define(\Hamidrezaniazi\Upolo\Models\File::class, function (Faker $fake
         'uuid'       => $faker->uuid,
         'path'       => 'public/',
         'filename'   => $faker->word,
-        'creator_id' => factory(User::class)
+        'creator_id' => factory(User::class),
     ];
 });
 
 $factory->state(\Hamidrezaniazi\Upolo\Models\File::class, 'has_owner', function () {
     $owner = \factory(\Hamidrezaniazi\Upolo\Tests\Models\MockModel::class)->create();
+
     return [
         'owner_id'   => $owner->getKey(),
         'owner_type' => $owner->getMorphClass(),

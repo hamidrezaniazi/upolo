@@ -66,12 +66,12 @@ abstract class Filters
     public function getFilters()
     {
         return array_filter($this->request->only($this->filters), function ($item) {
-            return !is_null($item);
+            return ! is_null($item);
         });
     }
 
     /**
-     * Order the query by givens orders
+     * Order the query by givens orders.
      *
      * @param $orders
      * @return \Illuminate\Database\Eloquent\Builder
@@ -81,6 +81,7 @@ abstract class Filters
         if (! is_array($orders)) {
             $orders = json_decode($orders, true);
         }
+
         return $this->builder->when(! empty($orders), function ($query) use ($orders) {
             foreach ($orders as $key => $order) {
                 $query->orderBy($key, $order);
