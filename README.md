@@ -42,6 +42,31 @@ class Owner extends Model implements HasFileInterface
     use HasFileTrait;
 ```
 
+Owner can filter by the scope:
+``` php
+Upolo::whereOwnerIs($owner)->get();
+```
+
+Also you can filter files by owner via request in your controller. The keys bellow are available for filtering that you can send via query string:
+- owner_id
+- owner_type
+
+For request filtering the index function of your controller should be like this:
+``` php
+<?php
+
+class FileController extends Controller
+{
+    /**
+     * @param FileFilters $filters
+     * @return AnonymousResourceCollection
+     */
+    public function index(FileFilters $filters): AnonymousResourceCollection
+    {
+        return FileResource::collection(File::filter($filters)->paginate());
+    }
+```
+
 ### Testing
 
 ``` bash
