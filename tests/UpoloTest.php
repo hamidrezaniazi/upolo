@@ -2,11 +2,15 @@
 
 namespace Hamidrezaniazi\Upolo\Tests;
 
+use Hamidrezaniazi\Upolo\Filters\FileFilters;
+use Hamidrezaniazi\Upolo\Http\Resources\FileResource;
 use Hamidrezaniazi\Upolo\Models\File;
 use Hamidrezaniazi\Upolo\Tests\Models\MockModel;
 use Hamidrezaniazi\Upolo\Tests\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -119,5 +123,80 @@ class UpoloTest extends TestCase
         factory(File::class, 5)->create();
         $this->assertEquals(1, File::whereOwnerTypeIs($file->owner->getMorphClass())->count());
         $this->assertTrue(File::whereOwnerTypeIs($file->owner->getMorphClass())->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldLoadPrimaryData()
+    {
+        $file = factory(File::class)->create();
+        $fileResource = new FileResource($file);
+        $fileResponse = $fileResource->toResponse(new Request());
+        $testResponse = new TestResponse($fileResponse);
+        $testResponse->assertJsonStructure(['data' => [
+            'id',
+            'uuid',
+            'path',
+            'disk',
+            'filename',
+            'mime',
+            'creator_id',
+            'creator',
+        ]]);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldLoadPrimaryDataWhenAllFieldArePresent()
+    {
+        $file = factory(File::class)->states('has_owner', 'has_type', 'has_flag')->create();
+        $fileResource = new FileResource($file);
+        $fileResponse = $fileResource->toResponse(new Request());
+        $testResponse = new TestResponse($fileResponse);
+        $testResponse->assertJsonStructure(['data' => [
+            'id',
+            'uuid',
+            'path',
+            'disk',
+            'filename',
+            'mime',
+            'creator_id',
+            'creator',
+            'type',
+            'flag',
+            'owner_id',
+            'owner_type',
+            'owner',
+        ]]);
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterByOwnerTypeViaRequest()
+    {
+        $file = factory(File::class)->state('has_owner')->create();
+        factory(File::class, 5)->create();
+        $request = new Request(['owner_type' => $file->owner->getMorphClass()]);
+        $filters = new FileFilters($request);
+        $files = File::filter($filters)->get();
+        $this->assertEquals(1, $files->count());
+        $this->assertTrue($files->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterByOwnerIdViaRequest()
+    {
+        $file = factory(File::class)->state('has_owner')->create();
+        factory(File::class, 5)->create();
+        $request = new Request(['owner_id' => $file->owner->getKey()]);
+        $filters = new FileFilters($request);
+        $files = File::filter($filters)->get();
+        $this->assertEquals(1, $files->count());
+        $this->assertTrue($files->first()->is($file));
     }
 }

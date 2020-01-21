@@ -2,7 +2,7 @@
 
 namespace Hamidrezaniazi\Upolo\Models;
 
-use App\Filters\FileFilters;
+use Hamidrezaniazi\Upolo\Filters\FileFilters;
 use Hamidrezaniazi\Upolo\Contracts\HasFileInterface;
 use Hamidrezaniazi\Upolo\Guard;
 use Illuminate\Contracts\Auth\Authenticatable as User;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filters;
+namespace Hamidrezaniazi\Upolo\Filters;
 
 class FileFilters extends Filters
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Hamidrezaniazi\Upolo\Http\Resource;
+namespace Hamidrezaniazi\Upolo\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

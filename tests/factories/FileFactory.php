@@ -23,6 +23,7 @@ $factory->define(\Hamidrezaniazi\Upolo\Models\File::class, function (Faker $fake
         'uuid'       => $faker->uuid,
         'path'       => 'public/',
         'filename'   => $faker->word,
+        'mime'       => $faker->word,
         'creator_id' => factory(User::class)
     ];
 });
@@ -32,5 +33,17 @@ $factory->state(\Hamidrezaniazi\Upolo\Models\File::class, 'has_owner', function 
     return [
         'owner_id'   => $owner->getKey(),
         'owner_type' => $owner->getMorphClass(),
+    ];
+});
+
+$factory->state(\Hamidrezaniazi\Upolo\Models\File::class, 'has_type', function (Faker $faker) {
+    return [
+        'type' => $faker->word,
+    ];
+});
+
+$factory->state(\Hamidrezaniazi\Upolo\Models\File::class, 'has_flag', function (Faker $faker) {
+    return [
+        'flag' => $faker->word,
     ];
 });
