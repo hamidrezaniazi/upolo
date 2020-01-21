@@ -2,8 +2,8 @@
 
 namespace Hamidrezaniazi\Upolo\Models;
 
-use Hamidrezaniazi\Upolo\Filters\FileFilters;
 use Hamidrezaniazi\Upolo\Contracts\HasFileInterface;
+use Hamidrezaniazi\Upolo\Filters\FileFilters;
 use Hamidrezaniazi\Upolo\Guard;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Builder;
