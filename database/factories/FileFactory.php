@@ -4,7 +4,6 @@
 
 use Faker\Generator as Faker;
 use Hamidrezaniazi\Upolo\Guard;
-use Hamidrezaniazi\Upolo\Tests\Models\User;
 use Illuminate\Database\Eloquent\Factory;
 
 /*
