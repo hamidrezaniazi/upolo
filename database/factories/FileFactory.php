@@ -3,6 +3,7 @@
 /* @var $factory Factory */
 
 use Faker\Generator as Faker;
+use Hamidrezaniazi\Upolo\Guard;
 use Hamidrezaniazi\Upolo\Tests\Models\User;
 use Illuminate\Database\Eloquent\Factory;
 
@@ -24,7 +25,7 @@ $factory->define(\Hamidrezaniazi\Upolo\Models\File::class, function (Faker $fake
         'path'       => 'public/',
         'filename'   => $faker->word,
         'mime'       => $faker->word,
-        'creator_id' => factory(User::class),
+        'creator_id' => factory(Guard::getGuardClassName()),
     ];
 });
 
