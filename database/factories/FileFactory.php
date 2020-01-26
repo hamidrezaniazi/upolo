@@ -21,7 +21,7 @@ $factory->define(\Hamidrezaniazi\Upolo\Models\File::class, function (Faker $fake
     return [
         'disk'       => 'public',
         'uuid'       => $faker->uuid,
-        'path'       => 'public/',
+        'path'       => 'public/file.png',
         'filename'   => $faker->word,
         'mime'       => $faker->word,
         'creator_id' => factory(Guard::getGuardClassName()),

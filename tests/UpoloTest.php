@@ -128,6 +128,15 @@ class UpoloTest extends TestCase
     /**
      * @test
      */
+    public function itShouldGenerateDownloadUrl()
+    {
+        $file = factory(File::class)->create();
+        $this->assertEquals(Storage::disk($file->disk)->url($file->path), $file->url);
+    }
+
+    /**
+     * @test
+     */
     public function itShouldLoadPrimaryData()
     {
         $file = factory(File::class)->create();
@@ -143,6 +152,7 @@ class UpoloTest extends TestCase
             'mime',
             'creator_id',
             'creator',
+            'url',
         ]]);
     }
 
@@ -169,6 +179,7 @@ class UpoloTest extends TestCase
             'owner_id',
             'owner_type',
             'owner',
+            'url',
         ]]);
     }
 

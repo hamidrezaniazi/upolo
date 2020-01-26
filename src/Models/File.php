@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -24,11 +25,14 @@ use Illuminate\Support\Str;
  * @property string type
  * @property string flag
  * @property string mime
+ * @property string url
  * @property HasFileInterface owner
  * @property User creator
  */
 class File extends Model
 {
+    protected $appends = ['url'];
+
     /**
      * @return BelongsTo
      */
@@ -121,5 +125,13 @@ class File extends Model
         $file->save();
 
         return $file;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlAttribute(): string
+    {
+        return Storage::disk($this->disk)->url($this->path);
     }
 }

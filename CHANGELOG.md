@@ -14,3 +14,7 @@ All notable changes to `upolo` will be documented in this file
 ## 1.0.2 - 2020-01-23
 
 - Fix autoload problem in laravel versions before 6.12
+
+## 1.1.2 - 2020-01-26
+
+- Append download url to file
