@@ -128,6 +128,28 @@ class UpoloTest extends TestCase
     /**
      * @test
      */
+    public function itCanFilterFilesByCreator()
+    {
+        $file = factory(File::class)->create();
+        factory(File::class, 5)->create();
+        $this->assertEquals(1, File::whereCreatorIs($file->creator)->count());
+        $this->assertTrue(File::whereCreatorIs($file->creator)->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterFilesByCreatorId()
+    {
+        $file = factory(File::class)->create();
+        factory(File::class, 5)->create();
+        $this->assertEquals(1, File::whereCreatorIdIs($file->creator->getKey())->count());
+        $this->assertTrue(File::whereCreatorIdIs($file->creator->getKey())->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
     public function itShouldGenerateDownloadUrl()
     {
         $file = factory(File::class)->create();
@@ -205,6 +227,20 @@ class UpoloTest extends TestCase
         $file = factory(File::class)->state('has_owner')->create();
         factory(File::class, 5)->create();
         $request = new Request(['owner_id' => $file->owner->getKey()]);
+        $filters = new FileFilters($request);
+        $files = File::filter($filters)->get();
+        $this->assertEquals(1, $files->count());
+        $this->assertTrue($files->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterByCreatorIdViaRequest()
+    {
+        $file = factory(File::class)->create();
+        factory(File::class, 5)->create();
+        $request = new Request(['creator_id' => $file->creator->getKey()]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
         $this->assertEquals(1, $files->count());

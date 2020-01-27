@@ -9,7 +9,7 @@ class FileFilters extends Filters
      *
      * @var array
      */
-    protected $filters = ['owner_type', 'owner_id'];
+    protected $filters = ['owner_type', 'owner_id', 'creator_id'];
 
     /**
      * @param string $ownerType
@@ -27,5 +27,14 @@ class FileFilters extends Filters
     protected function owner_id(int $ownerId)
     {
         return $this->builder->whereOwnerIdIs($ownerId);
+    }
+
+    /**
+     * @param int $creatorId
+     * @return mixed
+     */
+    protected function creator_id(int $creatorId)
+    {
+        return $this->builder->whereCreatorIdIs($creatorId);
     }
 }

@@ -92,6 +92,26 @@ class File extends Model
     }
 
     /**
+     * @param Builder $query
+     * @param User $creator
+     * @return Builder
+     */
+    public function scopeWhereCreatorIs(Builder $query, User $creator): Builder
+    {
+        return $query->where('creator_id', $creator->getKey());
+    }
+
+    /**
+     * @param Builder $query
+     * @param int $creatorId
+     * @return Builder
+     */
+    public function scopeWhereCreatorIdIs(Builder $query, int $creatorId): Builder
+    {
+        return $query->where('creator_id', $creatorId);
+    }
+
+    /**
      * @param User $creator
      * @param UploadedFile $uploadedFile
      * @param HasFileInterface $owner
