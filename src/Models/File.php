@@ -172,6 +172,7 @@ class File extends Model
     public function delete()
     {
         Storage::disk($this->disk)->delete($this->path);
+
         return parent::delete();
     }
 
