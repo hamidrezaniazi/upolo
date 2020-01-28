@@ -25,12 +25,12 @@ php artisan migrate
 ## Usage
 You can persist uploaded files using the facade:
 ``` php
-Upolo::upload($uploadedFile)
+$file = Upolo::upload($uploadedFile)
 ```
 
 If you want to add options in your file model during persisting, use this:
 ``` php
-Upolo::upload($uploadedFile, $user, $owner, $disk, $flag)
+$file = Upolo::upload($uploadedFile, $user, $owner, $disk, $flag)
 ```
 
 **Owner** is related to your file with a polymorphic relation and should implement from  **HasFileInterface** and use the trait **HasFileTrait** like this:
@@ -89,6 +89,11 @@ class FileController extends Controller
     {
         return FileResource::collection(File::filter($filters)->paginate());
     }
+```
+
+Deleting file from storage and database is accessible with delete method:
+``` php
+$file->delete();
 ```
 
 ### Testing
