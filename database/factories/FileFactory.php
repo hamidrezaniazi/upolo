@@ -22,9 +22,9 @@ $factory->define(\Hamidrezaniazi\Upolo\Models\File::class, function (Faker $fake
         'disk'       => 'public',
         'uuid'       => $faker->uuid,
         'path'       => 'public/file.png',
-        'filename'   => $faker->word,
-        'type'       => $faker->word,
-        'mime'       => $faker->word,
+        'filename'   => $faker->unique()->word,
+        'type'       => $faker->unique()->word,
+        'mime'       => $faker->unique()->word,
         'creator_id' => factory(Guard::getGuardClassName()),
     ];
 });
@@ -40,6 +40,6 @@ $factory->state(\Hamidrezaniazi\Upolo\Models\File::class, 'has_owner', function 
 
 $factory->state(\Hamidrezaniazi\Upolo\Models\File::class, 'has_flag', function (Faker $faker) {
     return [
-        'flag' => $faker->word,
+        'flag' => $faker->unique()->word,
     ];
 });
