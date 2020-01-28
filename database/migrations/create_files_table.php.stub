@@ -23,7 +23,7 @@ class CreateFilesTable extends Migration
             $table->string('flag')->nullable();
             $table->string('mime')->nullable();
             $table->nullableMorphs('owner');
-            $table->unsignedBigInteger('creator_id');
+            $table->unsignedBigInteger('creator_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

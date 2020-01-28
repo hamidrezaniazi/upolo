@@ -25,12 +25,12 @@ php artisan migrate
 ## Usage
 You can persist uploaded files using the facade:
 ``` php
-Upolo::upload($user, $uploadedFile)
+Upolo::upload($uploadedFile)
 ```
 
 If you want to add options in your file model during persisting, use this:
 ``` php
-Upolo::upload($user, $uploadedFile, $owner, $disk, $type, $flag)
+Upolo::upload($uploadedFile, $user, $owner, $disk, $flag)
 ```
 
 **Owner** is related to your file with a polymorphic relation and should implement from  **HasFileInterface** and use the trait **HasFileTrait** like this:
@@ -42,14 +42,38 @@ class Owner extends Model implements HasFileInterface
     use HasFileTrait;
 ```
 
-Owner can filter by the scope:
+Available filter scopes are:
 ``` php
+//Filter by owner
 Upolo::whereOwnerIs($owner)->get();
+
+//Filter by owner id
+Upolo::whereOwnerIdIs($ownerId)->get();
+
+//Filter by owner type
+Upolo::whereOwnerTypeIs($ownerType)->get();
+
+//Filter by creator
+Upolo::whereCreatorIs($creator)->get();
+
+//Filter by creator id
+Upolo::whereCreatorIdIs($creatorId)->get();
+
+//Filter by flag
+Upolo::whereFlagIs($flag)->get();
+
+//Filter by type
+Upolo::whereTypeIs($type)->get();
 ```
 
-Also you can filter files by owner via request in your controller. The keys bellow are available for filtering that you can send via query string:
+**Type** is filled automatically based on mime type and includes image, video, application, etc.
+
+Also you can filter files via request in your controller. The keys bellow are available for filtering that you can send via query string:
 - owner_id
 - owner_type
+- creator_id
+- type
+- flag
 
 For request filtering the index function of your controller should be like this:
 ``` php

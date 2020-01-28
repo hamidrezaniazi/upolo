@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UpoloTest extends TestCase
 {
@@ -39,11 +40,10 @@ class UpoloTest extends TestCase
         $user = factory(User::class)->create();
         $owner = factory(MockModel::class)->create();
         $filename = $this->faker->word;
-        $type = $this->faker->word;
         $flag = $this->faker->word;
         $disk = 'public';
         $uploadedFile = UploadedFile::fake()->create($filename);
-        $file = $this->file->upload($user, $uploadedFile, $owner, $disk, $type, $flag);
+        $file = $this->file->upload($uploadedFile, $user, $owner, $disk, $flag);
         $path = sprintf('%s/%s/%s', $user->getKey(), $file->uuid, $uploadedFile->hashName());
         $this->assertDatabaseHas(
             'files',
@@ -54,7 +54,7 @@ class UpoloTest extends TestCase
                 'filename'   => $filename,
                 'mime'       => $uploadedFile->getClientMimeType(),
                 'disk'       => $disk,
-                'type'       => $type,
+                'type'       => strtok($uploadedFile->getClientMimeType(), '/'),
                 'flag'       => $flag,
                 'path'       => $path,
             ]
@@ -69,27 +69,40 @@ class UpoloTest extends TestCase
     public function itCanUploadFileWithoutRequiredData()
     {
         Storage::fake();
-        $user = factory(User::class)->create();
         $filename = $this->faker->word;
         $uploadedFile = UploadedFile::fake()->create($filename);
-        $file = $this->file->upload($user, $uploadedFile);
-        $path = sprintf('%s/%s/%s', $user->getKey(), $file->uuid, $uploadedFile->hashName());
+        $file = $this->file->upload($uploadedFile);
+        $path = sprintf('%s/%s', $file->uuid, $uploadedFile->hashName());
         $this->assertDatabaseHas(
             'files',
             [
-                'creator_id' => $user->getKey(),
+                'creator_id' => null,
                 'owner_type' => null,
                 'owner_id'   => null,
                 'filename'   => $filename,
                 'mime'       => $uploadedFile->getClientMimeType(),
                 'disk'       => 'public',
-                'type'       => null,
+                'type'       => strtok($uploadedFile->getClientMimeType(), '/'),
                 'flag'       => null,
                 'path'       => $path,
             ]
         );
         $this->assertNotNull($file->uuid);
         Storage::disk('public')->assertExists($path);
+    }
+
+    /**
+     * @test
+     */
+    public function itCanRemoveFile()
+    {
+        Storage::fake();
+        $filename = $this->faker->word;
+        $uploadedFile = UploadedFile::fake()->create($filename);
+        $file = $this->file->upload($uploadedFile);
+        $file->delete();
+        Storage::disk('public')->assertMissing($file->path);
+        $this->assertEmpty(File::all());
     }
 
     /**
@@ -150,6 +163,28 @@ class UpoloTest extends TestCase
     /**
      * @test
      */
+    public function itCanFilterFilesByType()
+    {
+        $file = factory(File::class)->create();
+        factory(File::class, 5)->create();
+        $this->assertEquals(1, File::whereTypeIs($file->type)->count());
+        $this->assertTrue(File::whereTypeIs($file->type)->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterFilesByFlag()
+    {
+        $file = factory(File::class)->state('has_flag')->create();
+        factory(File::class, 5)->state('has_flag')->create();
+        $this->assertEquals(1, File::whereFlagIs($file->flag)->count());
+        $this->assertTrue(File::whereFlagIs($file->flag)->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
     public function itShouldGenerateDownloadUrl()
     {
         $file = factory(File::class)->create();
@@ -175,6 +210,7 @@ class UpoloTest extends TestCase
             'creator_id',
             'creator',
             'url',
+            'type',
         ]]);
     }
 
@@ -183,7 +219,7 @@ class UpoloTest extends TestCase
      */
     public function itShouldLoadPrimaryDataWhenAllFieldArePresent()
     {
-        $file = factory(File::class)->states('has_owner', 'has_type', 'has_flag')->create();
+        $file = factory(File::class)->states('has_owner', 'has_flag')->create();
         $fileResource = new FileResource($file);
         $fileResponse = $fileResource->toResponse(new Request());
         $testResponse = new TestResponse($fileResponse);
@@ -241,6 +277,34 @@ class UpoloTest extends TestCase
         $file = factory(File::class)->create();
         factory(File::class, 5)->create();
         $request = new Request(['creator_id' => $file->creator->getKey()]);
+        $filters = new FileFilters($request);
+        $files = File::filter($filters)->get();
+        $this->assertEquals(1, $files->count());
+        $this->assertTrue($files->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterByTypeViaRequest()
+    {
+        $file = factory(File::class)->create();
+        factory(File::class, 5)->create();
+        $request = new Request(['type' => $file->type]);
+        $filters = new FileFilters($request);
+        $files = File::filter($filters)->get();
+        $this->assertEquals(1, $files->count());
+        $this->assertTrue($files->first()->is($file));
+    }
+
+    /**
+     * @test
+     */
+    public function itCanFilterByFlagViaRequest()
+    {
+        $file = factory(File::class)->state('has_flag')->create();
+        factory(File::class, 5)->state('has_flag')->create();
+        $request = new Request(['flag' => $file->flag]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
         $this->assertEquals(1, $files->count());

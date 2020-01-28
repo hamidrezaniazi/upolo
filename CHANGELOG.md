@@ -22,3 +22,11 @@ All notable changes to `upolo` will be documented in this file
 ## 1.2.0 - 2020-01-27
 
 - Add filter by creator
+
+## 2.0.0 - 2020-01-28
+
+- Make creator nullable
+- Fill type with file mime (image, audio, application, ...)
+- Add file deletion
+- Add filter on type
+- Add filter on flag

@@ -112,24 +112,42 @@ class File extends Model
     }
 
     /**
-     * @param User $creator
+     * @param Builder $query
+     * @param string $type
+     * @return Builder
+     */
+    public function scopeWhereTypeIs(Builder $query, string $type): Builder
+    {
+        return $query->where('type', $type);
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $flag
+     * @return Builder
+     */
+    public function scopeWhereFlagIs(Builder $query, string $flag): Builder
+    {
+        return $query->where('flag', $flag);
+    }
+
+    /**
      * @param UploadedFile $uploadedFile
-     * @param HasFileInterface $owner
-     * @param string $disk
-     * @param string|null $type
+     * @param User|null $creator
+     * @param HasFileInterface|null $owner
+     * @param string|null $disk
      * @param string|null $flag
-     * @return File
+     * @return $this
      */
     public function upload(
-        User $creator,
         UploadedFile $uploadedFile,
+        ?User $creator = null,
         ?HasFileInterface $owner = null,
         ?string $disk = 'public',
-        ?string $type = null,
         ?string $flag = null
     ): self {
         $uuid = Str::uuid();
-        $path = sprintf('%s/%s', $creator->getKey(), $uuid);
+        $path = is_null($creator) ? $uuid : sprintf('%s/%s', $creator->getKey(), $uuid);
         $path = $uploadedFile->store($path, $disk);
 
         $file = new self();
@@ -139,12 +157,22 @@ class File extends Model
         $file->filename = $uploadedFile->getClientOriginalName();
         $file->mime = $uploadedFile->getClientMimeType();
         $file->disk = $disk;
-        $file->type = $type;
+        $file->type = strtok($uploadedFile->getClientMimeType(), '/');
         $file->flag = $flag;
         $file->path = $path;
         $file->save();
 
         return $file;
+    }
+
+    /**
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        Storage::disk($this->disk)->delete($this->path);
+        return parent::delete();
     }
 
     /**
