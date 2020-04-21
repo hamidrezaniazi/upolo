@@ -30,3 +30,7 @@ All notable changes to `upolo` will be documented in this file
 - Add file deletion
 - Add filter on type
 - Add filter on flag
+
+## 2.0.1 - 2020-04-22
+
+- Change to compatible with Laravel ^7.0
