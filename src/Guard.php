@@ -14,6 +14,7 @@ class Guard
     public static function getGuardClassName(): string
     {
         $guard = Config::get('auth.defaults.guard');
+
         return collect(config('auth.guards'))
             ->map(function ($guard) {
                 if (! isset($guard['provider'])) {

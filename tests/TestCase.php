@@ -13,8 +13,7 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->withFactories(__DIR__.'/factories');
-        $this->withFactories(__DIR__ . '/../database/factories');
-
+        $this->withFactories(__DIR__.'/../database/factories');
     }
 
     protected function getEnvironmentSetUp($app)
