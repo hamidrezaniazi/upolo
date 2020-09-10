@@ -14,7 +14,7 @@ class UpoloServiceProvider extends ServiceProvider
         if (method_exists($this, 'loadFactoriesFrom')) {
             $this->loadFactoriesFrom(__DIR__.'/../database/factories');
         }
-        
+
         if (! class_exists('CreateModelHistoriesTable')) {
             $this->publishes([
                 __DIR__.'/../database/migrations/create_files_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_files_table.php'),
