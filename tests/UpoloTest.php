@@ -8,11 +8,11 @@ use Hamidrezaniazi\Upolo\Models\File;
 use Hamidrezaniazi\Upolo\Tests\Models\MockModel;
 use Hamidrezaniazi\Upolo\Tests\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Testing\TestResponse;
 
 class UpoloTest extends TestCase
 {

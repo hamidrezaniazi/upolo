@@ -34,3 +34,7 @@ All notable changes to `upolo` will be documented in this file
 ## 2.0.1 - 2020-04-22
 
 - Change to compatible with Laravel ^7.0
+
+## 2.0.2 - 2020-09-10
+
+- Change to compatible with Laravel ^8.0

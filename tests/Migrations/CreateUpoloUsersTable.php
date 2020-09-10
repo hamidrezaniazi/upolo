@@ -14,7 +14,7 @@ class CreateUpoloUsersTable
      */
     public function up()
     {
-        Schema::create('upolo_users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ class CreateUpoloUsersTable
      */
     public function down()
     {
-        Schema::drop('upolo_users');
+        Schema::drop('users');
     }
 }
