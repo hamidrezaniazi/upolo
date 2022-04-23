@@ -3,10 +3,12 @@
 namespace Hamidrezaniazi\Upolo\Models;
 
 use Hamidrezaniazi\Upolo\Contracts\HasFileInterface;
+use Hamidrezaniazi\Upolo\Database\Factories\FileFactory;
 use Hamidrezaniazi\Upolo\Filters\FileFilters;
 use Hamidrezaniazi\Upolo\Guard;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -31,7 +33,14 @@ use Illuminate\Support\Str;
  */
 class File extends Model
 {
+    use HasFactory;
+
     protected $appends = ['url'];
+
+    protected static function newFactory()
+    {
+        return new FileFactory();
+    }
 
     /**
      * @return BelongsTo

@@ -36,8 +36,8 @@ class UpoloTest extends TestCase
     public function itCanUploadFile()
     {
         Storage::fake();
-        $user = factory(User::class)->create();
-        $owner = factory(MockModel::class)->create();
+        $user = User::factory()->create();
+        $owner = MockModel::factory()->create();
         $filename = $this->faker->word;
         $flag = $this->faker->word;
         $disk = 'public';
@@ -109,8 +109,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByOwner()
     {
-        $file = factory(File::class)->state('has_owner')->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->hasOwner()->create();
+        File::factory()->count(5)->create();
         $this->assertEquals(1, File::whereOwnerIs($file->owner)->count());
         $this->assertTrue(File::whereOwnerIs($file->owner)->first()->is($file));
     }
@@ -120,8 +120,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByOwnerId()
     {
-        $file = factory(File::class)->state('has_owner')->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->hasOwner()->create();
+        File::factory()->count(5)->create();
         $this->assertEquals(1, File::whereOwnerIdIs($file->owner->getKey())->count());
         $this->assertTrue(File::whereOwnerIdIs($file->owner->getKey())->first()->is($file));
     }
@@ -131,8 +131,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByOwnerType()
     {
-        $file = factory(File::class)->state('has_owner')->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->hasOwner()->create();
+        File::factory()->count(5)->create();
         $this->assertEquals(1, File::whereOwnerTypeIs($file->owner->getMorphClass())->count());
         $this->assertTrue(File::whereOwnerTypeIs($file->owner->getMorphClass())->first()->is($file));
     }
@@ -142,8 +142,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByCreator()
     {
-        $file = factory(File::class)->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->create();
+        File::factory()->count(5)->create();
         $this->assertEquals(1, File::whereCreatorIs($file->creator)->count());
         $this->assertTrue(File::whereCreatorIs($file->creator)->first()->is($file));
     }
@@ -153,8 +153,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByCreatorId()
     {
-        $file = factory(File::class)->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->create();
+        File::factory()->count(5)->create();
         $this->assertEquals(1, File::whereCreatorIdIs($file->creator->getKey())->count());
         $this->assertTrue(File::whereCreatorIdIs($file->creator->getKey())->first()->is($file));
     }
@@ -164,8 +164,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByType()
     {
-        $file = factory(File::class)->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->create();
+        File::factory()->count(5)->create();
         $this->assertEquals(1, File::whereTypeIs($file->type)->count());
         $this->assertTrue(File::whereTypeIs($file->type)->first()->is($file));
     }
@@ -175,8 +175,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterFilesByFlag()
     {
-        $file = factory(File::class)->state('has_flag')->create();
-        factory(File::class, 5)->state('has_flag')->create();
+        $file = File::factory()->hasFlag()->create();
+        File::factory()->count(5)->hasFlag()->create();
         $this->assertEquals(1, File::whereFlagIs($file->flag)->count());
         $this->assertTrue(File::whereFlagIs($file->flag)->first()->is($file));
     }
@@ -186,7 +186,7 @@ class UpoloTest extends TestCase
      */
     public function itShouldGenerateDownloadUrl()
     {
-        $file = factory(File::class)->create();
+        $file = File::factory()->create();
         $this->assertEquals(Storage::disk($file->disk)->url($file->path), $file->url);
     }
 
@@ -195,7 +195,7 @@ class UpoloTest extends TestCase
      */
     public function itShouldLoadPrimaryData()
     {
-        $file = factory(File::class)->create();
+        $file = File::factory()->create();
         $fileResource = new FileResource($file);
         $fileResponse = $fileResource->toResponse(new Request());
         $testResponse = new TestResponse($fileResponse);
@@ -218,7 +218,7 @@ class UpoloTest extends TestCase
      */
     public function itShouldLoadPrimaryDataWhenAllFieldArePresent()
     {
-        $file = factory(File::class)->states('has_owner', 'has_flag')->create();
+        $file = File::factory()->hasOwner()->hasFlag()->create();
         $fileResource = new FileResource($file);
         $fileResponse = $fileResource->toResponse(new Request());
         $testResponse = new TestResponse($fileResponse);
@@ -245,8 +245,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterByOwnerTypeViaRequest()
     {
-        $file = factory(File::class)->state('has_owner')->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->hasOwner()->create();
+        File::factory()->count(5)->create();
         $request = new Request(['owner_type' => $file->owner->getMorphClass()]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
@@ -259,8 +259,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterByOwnerIdViaRequest()
     {
-        $file = factory(File::class)->state('has_owner')->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->hasOwner()->create();
+        File::factory()->count(5)->create();
         $request = new Request(['owner_id' => $file->owner->getKey()]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
@@ -273,8 +273,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterByCreatorIdViaRequest()
     {
-        $file = factory(File::class)->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->create();
+        File::factory()->count(5)->create();
         $request = new Request(['creator_id' => $file->creator->getKey()]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
@@ -287,8 +287,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterByTypeViaRequest()
     {
-        $file = factory(File::class)->create();
-        factory(File::class, 5)->create();
+        $file = File::factory()->create();
+        File::factory()->count(5)->create();
         $request = new Request(['type' => $file->type]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
@@ -301,8 +301,8 @@ class UpoloTest extends TestCase
      */
     public function itCanFilterByFlagViaRequest()
     {
-        $file = factory(File::class)->state('has_flag')->create();
-        factory(File::class, 5)->state('has_flag')->create();
+        $file = File::factory()->hasFlag()->create();
+        File::factory()->count(5)->hasFlag()->create();
         $request = new Request(['flag' => $file->flag]);
         $filters = new FileFilters($request);
         $files = File::filter($filters)->get();
