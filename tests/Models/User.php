@@ -2,9 +2,11 @@
 
 namespace Hamidrezaniazi\Upolo\Tests\Models;
 
+use Hamidrezaniazi\Upolo\Database\Factories\UserFactory;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 
@@ -12,6 +14,12 @@ class User extends Model implements AuthorizableContract, AuthenticatableContrac
 {
     use Authorizable;
     use Authenticatable;
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return new UserFactory();
+    }
 
     protected $table = 'users';
 
